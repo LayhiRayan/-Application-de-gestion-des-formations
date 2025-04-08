@@ -35,9 +35,6 @@ public class Inscription {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Date getDateInscription() {
         return dateInscription;
