@@ -41,10 +41,37 @@ Développer une application web de gestion des formations avec une interface dyn
 
 ## 📄 Classes principales
 
-- `Formation` : titre, description, durée
-- `User` : nom, email, mot de passe
-- `Inscription` : formation (Formation), user (User), dateInscription
-- `Formateur` : nom, spécialité
+- `User` : représente un utilisateur générique avec les attributs suivants :
+  - `id` : identifiant unique
+  - `nom` : nom de l'utilisateur
+  - `email` : adresse email
+  - `motDePasse` : mot de passe
+
+- `Apprenant` (hérite de `User`) : représente un utilisateur inscrit à une ou plusieurs formations.
+  - `idApprenant` : identifiant spécifique de l'apprenant (optionnel si héritage pur)
+
+- `Formateur` : représente un utilisateur qui anime une ou plusieurs formations.
+  - `idFormateur` : identifiant du formateur
+  - `specialite` : domaine de spécialisation
+
+- `Formation` (hérite de `User`) : désigne une formation disponible sur la plateforme.
+  - `id` : identifiant unique
+  - `titre` : titre de la formation
+  - `description` : description de la formation
+  - `duree` : durée en heures ou jours
+  - Relation : animée par un seul `Formateur`, et suivie par plusieurs `Apprenants`
+
+- `Inscription` : représente la participation d’un `Apprenant` à une `Formation`.
+  - `dateInscription` : date à laquelle l’inscription a été faite
+  - Associations : liée à un `Apprenant` et une `Formation`
+
+## 📐 Diagramme de classes
+
+Le diagramme de classes ci-dessous représente la structure principale de l'application, ainsi que les relations entre les différentes entités du système.
+![Application de Gestion des Formations DC](https://github.com/user-attachments/assets/41c6ae7d-d082-471a-b474-3780674a5c18)
+
+
+
 
 ## 📃 Pages principales
 
