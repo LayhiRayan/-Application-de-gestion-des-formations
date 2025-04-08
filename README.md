@@ -32,6 +32,7 @@ Développer une application web de gestion des formations avec une interface dyn
 |----------------------------|-----------------------------------------------------------------------------|
 | **Java Web (JSP / Servlet)** | Technologie principale côté serveur pour gérer la logique métier et l’interface web de l’application, selon l’architecture MVC. |
 | **MySQL**                  | Système de gestion de base de données relationnelle utilisé pour stocker les données des formations, utilisateurs, formateurs et inscriptions. |
+| **JDBC**                   | API Java pour la communication directe avec la base de données (utilisé dans les DAO). |
 | **Hibernate**              | Framework ORM utilisé pour automatiser la gestion de la persistance des objets Java vers la base de données MySQL. |
 | **AJAX (Asynchronous JavaScript and XML)** | Utilisé pour rendre les interactions dynamiques, notamment pour permettre une **inscription instantanée sans rechargement** de la page. |
 | **Chart.js**               | Librairie JavaScript permettant d’afficher des **statistiques graphiques** (ex : nombre d’inscrits par formation) de manière interactive. |
