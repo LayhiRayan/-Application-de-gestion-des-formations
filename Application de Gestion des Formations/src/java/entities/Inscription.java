@@ -9,7 +9,6 @@ public class Inscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
     @Temporal(TemporalType.DATE)
     private Date dateInscription;
