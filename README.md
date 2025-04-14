@@ -50,7 +50,7 @@ Le diagramme de classes ci-dessous représente la structure principale de l'appl
 
 ##  🗺️ Modèle conceptuel de la base généré :
 
-![BD](https://github.com/user-attachments/assets/d11fc32d-f1fe-4239-9022-b74b5eba84c6)
+![BDF](https://github.com/user-attachments/assets/e79eebf0-1e5e-46e0-b426-0ad6e1c26054)
 
 
 ##  🧪 Execution des tests dans la console :
