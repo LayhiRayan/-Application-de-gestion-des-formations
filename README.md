@@ -53,7 +53,7 @@ Le diagramme de classes ci-dessous représente la structure principale de l'appl
 ![BD](https://github.com/user-attachments/assets/d11fc32d-f1fe-4239-9022-b74b5eba84c6)
 
 
-
+##  🧪 Execution des tests dans la console :
 
 ## 📃 Pages principales
 
