@@ -48,6 +48,10 @@ Le diagramme de classes ci-dessous représente la structure principale de l'appl
 
 ![image](https://github.com/user-attachments/assets/a5b6d78d-b9f9-4e21-b962-7cf369f70fa9)
 
+##  🗺️ Modèle conceptuel de la base généré :
+
+![BD](https://github.com/user-attachments/assets/d11fc32d-f1fe-4239-9022-b74b5eba84c6)
+
 
 
 
