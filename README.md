@@ -54,6 +54,45 @@ Le diagramme de classes ci-dessous représente la structure principale de l'appl
 
 
 ##  🧪 Execution des tests dans la console :
+*1.Création des tables dans la base de données :*
+
+![Capture](https://github.com/user-attachments/assets/e1f35e25-134c-404d-b179-4a0e98913ab3)
+
+
+*2.Insertion des données dans les tables :*
+
+![Capture](https://github.com/user-attachments/assets/3bc79bf4-565e-4eeb-a9a5-672d815fd26f)
+![Capture2](https://github.com/user-attachments/assets/23aa0502-8174-44ad-990c-2d833074cc7c)
+![Capture3](https://github.com/user-attachments/assets/9e7782c0-a2a1-47b5-b1cd-fa4678ec38b5)
+![Capture4](https://github.com/user-attachments/assets/b11dca51-a818-47c0-b8c7-c26fd4ed44bb)
+![Capture5](https://github.com/user-attachments/assets/a30fbc0d-753a-4960-875c-32199922258f)
+
+
+
+
+
+
+
+*3.suppression:(Supprimer une formation)*
+
+![Capture1](https://github.com/user-attachments/assets/289a5e80-4e22-40ce-922f-f7d635bf16b1)
+![Capture2](https://github.com/user-attachments/assets/5f07cbd3-ba16-4b55-ac2d-1784ced2e2ad)
+![Capture3](https://github.com/user-attachments/assets/b009c6cf-3837-419c-9ed1-e47e22a11290)
+![Capture4](https://github.com/user-attachments/assets/2f084dbc-4144-49ab-b0aa-f6befbe27185)
+![Capture5](https://github.com/user-attachments/assets/37d3eb66-f219-4281-99a2-2b30dd6b37ef)
+
+*4.Filtrage apprenant :(Recherche d’apprenants par nom)*
+
+![Capture](https://github.com/user-attachments/assets/a5bd5769-1045-4ab7-8d43-622383557610)
+![Capture1](https://github.com/user-attachments/assets/fab72876-964e-4576-b17f-7622287070ca)
+![Capture2](https://github.com/user-attachments/assets/ede8982d-1267-40db-ab7b-1c01698957f9)
+![Capture3](https://github.com/user-attachments/assets/fbda3540-fcbb-447f-aede-86bb706dd8f2)
+
+
+
+
+
+
 
 ## 📃 Pages principales
 
