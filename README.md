@@ -46,11 +46,12 @@ Développer une application web de gestion des formations avec une interface dyn
 Le diagramme de classes ci-dessous représente la structure principale de l'application, ainsi que les relations entre les différentes entités du système.
 
 
-![image](https://github.com/user-attachments/assets/a5b6d78d-b9f9-4e21-b962-7cf369f70fa9)
+![image](https://github.com/user-attachments/assets/bdee23e5-0327-4010-8ecb-3eac425f8804)
 
 ##  🗺️ Modèle conceptuel de la base généré :
 
-![BDF](https://github.com/user-attachments/assets/e79eebf0-1e5e-46e0-b426-0ad6e1c26054)
+![image](https://github.com/user-attachments/assets/e3f966a8-0310-4dd5-aa65-6c2d5e9622a6)
+
 
 
 ##  🧪 Execution des tests dans la console :
