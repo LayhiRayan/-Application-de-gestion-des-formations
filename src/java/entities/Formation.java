@@ -17,10 +17,10 @@ public class Formation {
 
     @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Inscription> inscriptions;
-    @ManyToOne
-@JoinColumn(name = "formateur_id")
-private Formateur formateur;
 
+    @ManyToOne
+    @JoinColumn(name = "formateur_id")
+    private Formateur formateur;
 
     public Formation() {}
 
@@ -67,19 +67,16 @@ private Formateur formateur;
     public List<Inscription> getInscriptions() {
         return inscriptions;
     }
-    public Formateur getFormateur() {
-    return formateur;
-}
-
-public void setFormateur(Formateur formateur) {
-    this.formateur = formateur;
-}
-
 
     public void setInscriptions(List<Inscription> inscriptions) {
         this.inscriptions = inscriptions;
     }
 
+    public Formateur getFormateur() {
+        return formateur;
+    }
 
-    
+    public void setFormateur(Formateur formateur) {
+        this.formateur = formateur;
+    }
 }

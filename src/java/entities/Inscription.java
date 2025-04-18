@@ -7,36 +7,38 @@ import java.util.Date;
 @Table(name = "inscriptions")
 public class Inscription {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @EmbeddedId
+    private InscriptionPK id;
 
     @Temporal(TemporalType.DATE)
     private Date dateInscription;
 
     @ManyToOne
+    @MapsId("formationId")
     @JoinColumn(name = "formation_id")
     private Formation formation;
 
     @ManyToOne
+    @MapsId("userId") // Utilisation de "userId" comme clé étrangère pour l'Apprenant
     @JoinColumn(name = "user_id")
-    private User user;
+    private Apprenant apprenant;
 
     public Inscription() {}
 
-    public Inscription(Date dateInscription, Formation formation, User user) {
+    public Inscription(Date dateInscription, Formation formation, Apprenant apprenant) {
         this.dateInscription = dateInscription;
         this.formation = formation;
-        this.user = user;
+        this.apprenant = apprenant;
+        this.id = new InscriptionPK(apprenant.getId(), formation.getId());
     }
 
     // Getters & Setters
 
-    public int getId() {
+    public InscriptionPK getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(InscriptionPK id) {
         this.id = id;
     }
 
@@ -56,11 +58,11 @@ public class Inscription {
         this.formation = formation;
     }
 
-    public User getUser() {
-        return user;
+    public Apprenant getApprenant() {
+        return apprenant;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setApprenant(Apprenant apprenant) {
+        this.apprenant = apprenant;
     }
 }

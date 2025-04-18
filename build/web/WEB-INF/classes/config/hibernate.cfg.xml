@@ -13,5 +13,7 @@
     <mapping class="entities.Formateur"/>
     <mapping class="entities.Inscription"/>
     <mapping class="entities.User"/>
+    <mapping class="entities.Apprenant"/>
+    <mapping class="entities.Admin"/>
   </session-factory>
 </hibernate-configuration>

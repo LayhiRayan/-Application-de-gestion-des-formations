@@ -1,11 +1,11 @@
 package entities;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public class User {
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,15 +15,16 @@ public class User {
     private String email;
     private String motDePasse;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Inscription> inscriptions;
+    @Column(length = 20)
+    private String role; // exemple : apprenant, formateur
 
     public User() {}
 
-    public User(String nom, String email, String motDePasse) {
+    public User(String nom, String email, String motDePasse, String role) {
         this.nom = nom;
         this.email = email;
         this.motDePasse = motDePasse;
+        this.role = role;
     }
 
     // Getters & Setters
@@ -60,11 +61,11 @@ public class User {
         this.motDePasse = motDePasse;
     }
 
-    public List<Inscription> getInscriptions() {
-        return inscriptions;
+    public String getRole() {
+        return role;
     }
 
-    public void setInscriptions(List<Inscription> inscriptions) {
-        this.inscriptions = inscriptions;
+    public void setRole(String role) {
+        this.role = role;
     }
 }
