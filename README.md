@@ -46,11 +46,12 @@ Développer une application web de gestion des formations avec une interface dyn
 Le diagramme de classes ci-dessous représente la structure principale de l'application, ainsi que les relations entre les différentes entités du système.
 
 
-![image](https://github.com/user-attachments/assets/bdee23e5-0327-4010-8ecb-3eac425f8804)
+![image](https://github.com/user-attachments/assets/53b76a6f-e94f-4dea-bee1-dab151d108d9)
 
 ##  🗺️ Modèle conceptuel de la base généré :
 
-![image](https://github.com/user-attachments/assets/e3f966a8-0310-4dd5-aa65-6c2d5e9622a6)
+![image](https://github.com/user-attachments/assets/8d679616-11d2-4ffa-95a2-39c020cf8779)
+
 
 
 
@@ -112,5 +113,10 @@ Le diagramme de classes ci-dessous représente la structure principale de l'appl
 | **Sprint 4** | 6 jours | Intégration de **l’AJAX pour inscription dynamique** + **Chart.js pour les statistiques** |
 
 ---
+## 🎥 Demo
 
-📌 Ce projet met en œuvre un **système complet de gestion des formations** avec une expérience utilisateur fluide et une visualisation graphique en temps réel.
+
+https://github.com/user-attachments/assets/fd8bc1f2-735d-4dfd-a676-df3623f19dd6
+
+
+
