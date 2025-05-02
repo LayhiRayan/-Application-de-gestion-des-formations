@@ -6,8 +6,8 @@ import javax.mail.internet.*;
 
 public class SendMail {
 
-    private static final String EMAIL_SENDER = "layhirayan7@gmail.com"; // ton adresse Gmail
-    private static final String PASSWORD_SENDER = "kqze zvzu ecfe gzzv"; // mot de passe d'application
+    private static final String EMAIL_SENDER = "skillforge212@gmail.com"; // ton adresse Gmail
+    private static final String PASSWORD_SENDER = "ixeu rkyt gvfg tvqc"; // mot de passe d'application
 
     public static void envoyerCode(String destinataire, String code) {
         Properties props = new Properties();

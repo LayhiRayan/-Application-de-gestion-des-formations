@@ -22,7 +22,7 @@ public class ResetPasswordController extends HttpServlet {
         User user = (User) session.getAttribute("user_reset");
 
         if (newPassword.equals(confirmPassword)) {
-            user.setMotDePasse(newPassword);  // 🔒 tu peux ajouter du hash si tu veux
+            user.setMotDePasse(newPassword);  
             userService.update(user);
             session.removeAttribute("user_reset");
             session.removeAttribute("code");

@@ -2,197 +2,192 @@
 <%@ page import="java.util.List" %>
 <%@ page import="entities.Apprenant, entities.Formateur, entities.Formation" %>
 <%@ page pageEncoding="UTF-8" %>
+<%@ page import="entities.Admin" %>
+<%
+    Admin admin = (Admin) session.getAttribute("user");
+    String role = (String) session.getAttribute("type");
+
+    if (admin == null || !"admin".equals(role)) {
+        response.sendRedirect(request.getContextPath() + "/views/users/login.jsp");
+        return;
+    }
+%>
+
 <%
     List<Apprenant> apprenants = (List<Apprenant>) request.getAttribute("apprenants");
     List<Formateur> formateurs = (List<Formateur>) request.getAttribute("formateurs");
     List<Formation> formations = (List<Formation>) request.getAttribute("formations");
+
+    if (apprenants == null) {
+        apprenants = new java.util.ArrayList<Apprenant>();
+    }
+    if (formateurs == null) {
+        formateurs = new java.util.ArrayList<Formateur>();
+    }
+    if (formations == null) {
+        formations = new java.util.ArrayList<Formation>();
+    }
 %>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #f8961e;
-            --info: #560bad;
-            --sidebar-bg: #2b2d42;
-            --sidebar-text: #ffffff;
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 80px;
+            --transition-speed: 0.3s;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            display: flex;
-            min-height: 100vh;
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-color);
+            overflow-x: hidden;
         }
-
-        /* Sidebar Styles */
+        
+        /* Sidebar Styling */
         .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            color: var(--sidebar-text);
-            padding: 1.5rem;
+            width: var(--sidebar-width);
             position: fixed;
+            left: 0;
+            top: 0;
             height: 100vh;
-            transition: transform 0.3s;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h3 {
+            background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
             color: white;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            margin: 0;
+            transition: all var(--transition-speed) ease;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
         }
-
-        .sidebar-header i {
-            margin-right: 10px;
-            color: var(--accent);
+        
+        .sidebar.active {
+            width: var(--sidebar-collapsed-width);
         }
-
+        
+        .sidebar.active .sidebar-header h3,
+        .sidebar.active .sidebar-menu li a span,
+        .sidebar.active .logout-container .logout-btn span {
+            display: none;
+        }
+        
+        .sidebar.active .sidebar-menu li a i,
+        .sidebar.active .logout-container .logout-btn i {
+            margin-right: 0;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1.5rem 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-header h3 {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 0;
+        }
+        
         .sidebar-menu {
             list-style: none;
             padding: 0;
             margin: 0;
-            flex-grow: 1;
         }
-
-        .sidebar-menu li {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: var(--sidebar-text);
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
         }
-
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: rgba(255, 255, 255, 0.1);
+        
+        .sidebar-menu li a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
         }
-
-        .sidebar-menu i {
-            margin-right: 10px;
-            width: 20px;
+        
+        .sidebar-menu li a.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid white;
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 0.5rem;
+            width: 1.5rem;
             text-align: center;
         }
-
+        
         .logout-container {
-            margin-top: auto;
-            padding-top: 1rem;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         .logout-btn {
-            color: var(--danger);
-            background-color: rgba(247, 37, 133, 0.1);
-            width: 100%;
-        }
-
-        .logout-btn:hover {
-            background-color: rgba(247, 37, 133, 0.2);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 2rem;
-            transition: margin-left 0.3s;
-        }
-
-        /* Header */
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Cards */
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-bottom: 1.5rem;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.2s;
+            padding: 0.5rem;
+            border-radius: 0.35rem;
         }
-
-        .card-header i {
-            margin-right: 10px;
-            font-size: 1.2rem;
+        
+        .logout-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
-
-        .card-body {
+        
+        .logout-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: margin-left var(--transition-speed) ease;
             padding: 1.5rem;
+            min-height: 100vh;
         }
-
-        /* Tables */
-        .table {
-            margin-bottom: 0;
+        
+        .sidebar.active ~ .main-content {
+            margin-left: var(--sidebar-collapsed-width);
         }
-
-        .table th {
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            background-color: rgba(67, 97, 238, 0.1);
-            padding: 1rem;
+        
+        .dashboard-header {
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e3e6f0;
         }
-
-        .table td {
-            padding: 1rem;
-            vertical-align: middle;
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-right: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-
-        /* Buttons */
-        .btn-sm {
-            padding: 0.35rem 0.75rem;
-            font-size: 0.85rem;
-            border-radius: 6px;
+        
+        .menu-toggle:hover {
+            transform: rotate(90deg);
         }
-
+        
         /* Stats Cards */
         .stats-container {
             display: grid;
@@ -200,81 +195,91 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-
+        
         .stats-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 0.35rem;
             padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            color: var(--dark-color);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+        
+        .stats-card.apprenants::before {
+            background: var(--primary-color);
+        }
+        
+        .stats-card.formateurs::before {
+            background: var(--secondary-color);
+        }
+        
+        .stats-card.formations::before {
+            background: #f6c23e;
+        }
+        
         .stats-card i {
             font-size: 2rem;
             margin-bottom: 1rem;
-            color: var(--primary);
+            color: #dddfeb;
         }
-
+        
         .stats-card h3 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin: 0;
         }
-
+        
         .stats-card p {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 0;
+            margin: 0;
+            color: #b7b9cc;
         }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: #6c757d;
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #dee2e6;
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease forwards;
         }
-
-        /* Form Elements */
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            border: 1px solid #e0e0e0;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-        }
-
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
         /* Responsive */
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-100%);
+                left: -100%;
             }
+            
             .sidebar.active {
-                transform: translateX(0);
+                left: 0;
+                width: 100%;
             }
+            
             .main-content {
                 margin-left: 0;
             }
-            .menu-toggle {
-                display: block !important;
-            }
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            margin-right: 1rem;
         }
     </style>
 </head>
@@ -282,46 +287,52 @@
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
+    <div class="sidebar-header" data-aos="fade-right">
         <h3><i class="fas fa-user-shield"></i> Administration</h3>
     </div>
-    
+
     <ul class="sidebar-menu">
-        <li>
-            <a href="#" class="active">
-                <i class="fas fa-tachometer-alt"></i>
-                Tableau de bord
+        <li data-aos="fade-right" data-aos-delay="100">
+            <a href="<%= request.getContextPath() %>/admin/dashboard-admin" class="active">
+                <i class="fas fa-tachometer-alt"></i> <span>Tableau de bord</span>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <i class="fas fa-users"></i>
-                Apprenants
+        <li data-aos="fade-right" data-aos-delay="150">
+            <a href="<%= request.getContextPath() %>/admin/affecter-apprenant">
+                <i class="fas fa-users"></i> <span>Affecter Apprenant</span>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <i class="fas fa-chalkboard-teacher"></i>
-                Formateurs
+        <li data-aos="fade-right" data-aos-delay="200">
+            <a href="<%= request.getContextPath() %>/admin/formateurs">
+                <i class="fas fa-chalkboard-teacher"></i> <span>Affectation</span>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <i class="fas fa-book-open"></i>
-                Formations
+        <li data-aos="fade-right" data-aos-delay="250">
+            <a href="<%= request.getContextPath() %>/admin/formations">
+                <i class="fas fa-book-open"></i> <span>Formations</span>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <i class="fas fa-cog"></i>
-                Paramètres
+        <li data-aos="fade-right" data-aos-delay="300">
+            <a href="<%= request.getContextPath() %>/admin/statistiques">
+                <i class="fas fa-chart-pie"></i> <span>Statistiques</span>
             </a>
+        </li>
+        <li data-aos="fade-right" data-aos-delay="350">
+            <a href="<%= request.getContextPath() %>/admin/parametres">
+                <i class="fas fa-cog"></i> <span>Paramètres</span>
+            </a>
+                <li>
+                <a href="<%= request.getContextPath()%>/logout.jsp" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Déconnexion
+                </a>
+            </li>
         </li>
     </ul>
 
-    <div class="logout-container">
+    <div class="logout-container" data-aos="fade-up" data-aos-delay="400">
         <a href="<%= request.getContextPath() %>/logout.jsp" class="btn logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Déconnexion
+            <i class="fas fa-sign-out-alt"></i> <span>Déconnexion</span>
         </a>
     </div>
 </div>
@@ -329,7 +340,7 @@
 <!-- Main Content -->
 <div class="main-content">
     <!-- Header -->
-    <div class="dashboard-header d-flex justify-content-between align-items-center">
+    <div class="dashboard-header d-flex justify-content-between align-items-center" data-aos="fade-down">
         <div class="d-flex align-items-center">
             <button class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
@@ -341,218 +352,80 @@
         </div>
         <div>
             <span class="badge bg-light text-dark">
-                <i class="fas fa-user-shield me-1"></i> Administrateur
+                <i class="fas fa-user-shield me-1"></i> <%= admin.getNom() %>
             </span>
         </div>
     </div>
 
     <!-- Stats Cards -->
     <div class="stats-container">
-        <div class="stats-card">
-            <i class="fas fa-users text-primary"></i>
+        <a href="<%= request.getContextPath() %>/admin/affecter-apprenant" class="stats-card apprenants animate-fade-in delay-1" data-aos="zoom-in">
+            <i class="fas fa-users"></i>
             <h3><%= apprenants.size() %></h3>
             <p>Apprenants</p>
-        </div>
-        <div class="stats-card">
-            <i class="fas fa-chalkboard-teacher text-secondary"></i>
+        </a>
+        <a href="<%= request.getContextPath() %>/admin/formateurs" class="stats-card formateurs animate-fade-in delay-2" data-aos="zoom-in">
+            <i class="fas fa-chalkboard-teacher"></i>
             <h3><%= formateurs.size() %></h3>
             <p>Formateurs</p>
-        </div>
-        <div class="stats-card">
-            <i class="fas fa-book-open text-success"></i>
+        </a>
+        <a href="<%= request.getContextPath() %>/admin/formations" class="stats-card formations animate-fade-in delay-3" data-aos="zoom-in">
+            <i class="fas fa-book-open"></i>
             <h3><%= formations.size() %></h3>
             <p>Formations</p>
-        </div>
+        </a>
     </div>
 
-    <!-- Apprenants Section -->
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <i class="fas fa-users"></i> Apprenants
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <a href="<%= request.getContextPath() %>/admin/affecter-apprenant" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus me-2"></i> Affecter un apprenant
+            </a>
         </div>
-        <div class="card-body">
-            <% if (apprenants.isEmpty()) { %>
-                <div class="empty-state">
-                    <i class="fas fa-user-slash"></i>
-                    <h5>Aucun apprenant inscrit</h5>
-                    <p>Commencez par ajouter des apprenants</p>
-                </div>
-            <% } else { %>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Email</th>
-                                <th>Inscrit le</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (Apprenant a : apprenants) { %>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-user-circle fa-lg me-2"></i>
-                                            <strong><%= a.getNom() %></strong>
-                                        </div>
-                                    </td>
-                                    <td><%= a.getEmail() %></td>
-                                    <td>15 Jan 2023</td>
-                                    <td>
-                                        <form action="admin" method="post" class="d-inline">
-                                            <input type="hidden" name="action" value="supprimerApprenant">
-                                            <input type="hidden" name="id" value="<%= a.getId() %>">
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } %>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <a href="<%= request.getContextPath() %>/admin/formateurs" class="btn btn-secondary w-100">
+                <i class="fas fa-user-tie me-2"></i> Gérer les formateurs
+            </a>
         </div>
-    </div>
-
-    <!-- Formateurs Section -->
-    <div class="card">
-        <div class="card-header bg-secondary text-white">
-            <i class="fas fa-chalkboard-teacher"></i> Formateurs
-        </div>
-        <div class="card-body">
-            <% if (formateurs.isEmpty()) { %>
-                <div class="empty-state">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <h5>Aucun formateur enregistré</h5>
-                    <p>Ajoutez des formateurs pour créer des formations</p>
-                </div>
-            <% } else { %>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Email</th>
-                                <th>Spécialité</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (Formateur f : formateurs) { %>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-user-tie fa-lg me-2"></i>
-                                            <strong><%= f.getNom() %></strong>
-                                        </div>
-                                    </td>
-                                    <td><%= f.getEmail() %></td>
-                                    <td>
-                                        <span class="badge bg-info"><%= f.getSpecialite() %></span>
-                                    </td>
-                                    <td>
-                                        <form action="admin" method="post" class="d-inline">
-                                            <input type="hidden" name="action" value="supprimerFormateur">
-                                            <input type="hidden" name="id" value="<%= f.getId() %>">
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } %>
-        </div>
-    </div>
-
-    <!-- Formations Section -->
-    <div class="card">
-        <div class="card-header bg-success text-white">
-            <i class="fas fa-book-open"></i> Formations
-        </div>
-        <div class="card-body">
-            <!-- Add Formation Form -->
-            <form class="row g-3 mb-4" action="admin" method="post">
-                <input type="hidden" name="action" value="ajouterFormation">
-                <div class="col-md-4">
-                    <input type="text" name="titre" class="form-control" placeholder="Titre" required>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" name="description" class="form-control" placeholder="Description" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="duree" class="form-control" placeholder="Durée (h)" required>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-success w-100">
-                        <i class="fas fa-plus me-1"></i> Ajouter
-                    </button>
-                </div>
-            </form>
-
-            <!-- Formations List -->
-            <% if (formations.isEmpty()) { %>
-                <div class="empty-state">
-                    <i class="fas fa-book"></i>
-                    <h5>Aucune formation disponible</h5>
-                    <p>Créez votre première formation</p>
-                </div>
-            <% } else { %>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>Description</th>
-                                <th>Durée</th>
-                                <th>Formateur</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (Formation f : formations) { %>
-                                <tr>
-                                    <td><strong><%= f.getTitre() %></strong></td>
-                                    <td><%= f.getDescription() %></td>
-                                    <td>
-                                        <span class="badge bg-light text-dark"><%= f.getDuree() %> h</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-user-tie me-2"></i>
-                                            <%= f.getFormateur().getNom() %>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <form action="admin" method="post" class="d-inline">
-                                            <input type="hidden" name="action" value="supprimerFormation">
-                                            <input type="hidden" name="id" value="<%= f.getId() %>">
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } %>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <a href="<%= request.getContextPath() %>/admin/formateurs" class="btn btn-success w-100">
+                <i class="fas fa-plus-circle me-2"></i> Créer une formation
+            </a>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    // Toggle sidebar on mobile
+    // Initialize AOS (Animate On Scroll)
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Sidebar toggle
     document.getElementById('menuToggle').addEventListener('click', function() {
         document.getElementById('sidebar').classList.toggle('active');
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            let x = e.clientX - e.target.getBoundingClientRect().left;
+            let y = e.clientY - e.target.getBoundingClientRect().top;
+            
+            let ripples = document.createElement('span');
+            ripples.style.left = x + 'px';
+            ripples.style.top = y + 'px';
+            this.appendChild(ripples);
+            
+            setTimeout(() => {
+                ripples.remove();
+            }, 1000);
+        });
     });
 </script>
 </body>

@@ -1,9 +1,7 @@
 package dao;
 
-import dao.IDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.HibernateException;
 import util.HibernateUtil;
 import java.util.List;
 
@@ -14,77 +12,76 @@ public abstract class AbstractDao<T> implements IDao<T> {
         this.entityClass = entityClass;
     }
 
-    @Override
-    public boolean create(T o) {
-        return executeTransaction(session -> session.save(o));
+    protected interface HibernateOperation<T> {
+        T execute(Session session);
+    }
+
+    protected <R> R executeTransaction(HibernateOperation<R> operation) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            R result = operation.execute(session);
+            tx.commit();
+            return result;
+        } catch (RuntimeException e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
-    public boolean delete(T o) {
-        return executeTransaction(session -> session.delete(o));
+    public boolean create(T o) {
+        return executeTransaction(new HibernateOperation<Boolean>() {
+            @Override
+            public Boolean execute(Session session) {
+                session.save(o);
+                return true;
+            }
+        });
     }
 
     @Override
     public boolean update(T o) {
-        return executeTransaction(session -> session.update(o));
+        return executeTransaction(new HibernateOperation<Boolean>() {
+            @Override
+            public Boolean execute(Session session) {
+                session.update(o);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean delete(T o) {
+        return executeTransaction(new HibernateOperation<Boolean>() {
+            @Override
+            public Boolean execute(Session session) {
+                session.delete(o);
+                return true;
+            }
+        });
     }
 
     @Override
     public List<T> findAll() {
-        Session session = null;
-        Transaction tx = null;
-        List<T> list = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            tx = session.beginTransaction();
-            list = session.createQuery("from " + entityClass.getSimpleName()).list();
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) tx.rollback();
-        } finally {
-            if (session != null) session.close();
-        }
-        return list;
+        return executeTransaction(new HibernateOperation<List<T>>() {
+            @Override
+            public List<T> execute(Session session) {
+                return session.createQuery("FROM " + entityClass.getSimpleName()).list();
+            }
+        });
     }
 
     @Override
     public T findById(int id) {
-        Session session = null;
-        Transaction tx = null;
-        T entity = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            tx = session.beginTransaction();
-            entity = (T) session.get(entityClass, id);
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) tx.rollback();
-        } finally {
-            if (session != null) session.close();
-        }
-        return entity;
-    }
-
-    private boolean executeTransaction(HibernateOperation<T> operation) {
-        Session session = null;
-        Transaction tx = null;
-        boolean status = false;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            tx = session.beginTransaction();
-            operation.execute(session);
-            tx.commit();
-            status = true;
-        } catch (HibernateException e) {
-            if (tx != null) tx.rollback();
-        } finally {
-            if (session != null) session.close();
-        }
-        return status;
-    }
-
-    @FunctionalInterface
-    private interface HibernateOperation<T> {
-        void execute(Session session);
+        return executeTransaction(new HibernateOperation<T>() {
+            @Override
+            public T execute(Session session) {
+                return (T) session.get(entityClass, id);
+            }
+        });
     }
 }

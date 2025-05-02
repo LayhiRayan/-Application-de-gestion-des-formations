@@ -3,6 +3,7 @@ package controllers;
 import entities.User;
 import services.UserService;
 import services.ApprenantService;
+import services.InscriptionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,11 +15,13 @@ public class LoginController extends HttpServlet {
 
     private UserService userService;
     private ApprenantService apprenantService;
+    private InscriptionService inscriptionService;
 
     @Override
     public void init() throws ServletException {
         userService = new UserService();
         apprenantService = new ApprenantService();
+        inscriptionService = new InscriptionService(); // ✅ Ajout
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -40,12 +43,13 @@ public class LoginController extends HttpServlet {
 
                     switch (user.getRole()) {
                         case "apprenant":
-                            session.setAttribute("formations", apprenantService.findFormationsByApprenant(user.getId()));
+                            // ✅ Ajout de la liste des inscriptions
+                            session.setAttribute("inscriptions", inscriptionService.findByApprenant(user.getId()));
                             response.sendRedirect(request.getContextPath() + "/views/apprenants/dashboard.jsp");
                             break;
 
                         case "formateur":
-                            response.sendRedirect(request.getContextPath() + "/views/formateurs/dashboard.jsp");
+                            response.sendRedirect(request.getContextPath() + "/views/formateur/dashboard-formateur.jsp");
                             break;
 
                         case "admin":

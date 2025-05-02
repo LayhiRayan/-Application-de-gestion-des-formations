@@ -37,8 +37,18 @@ public class FormationService implements IService<Formation> {
         return dao.findById(id);
     }
 
-    // Méthode spécifique à Formation
     public List<Formation> findByTitre(String titre) {
-        return dao.findByTitre(titre); // Utilisation de la méthode spécifique du DAO
+        return dao.findByTitre(titre);
     }
+
+
+
+    public List<Formation> findFormationsNonInscrites(int apprenantId) {
+    return dao.findFormationsNonInscrites(apprenantId);
+}
+    public List<Formation> findByFormateur(int formateurId) {
+    return dao.findByFormateur(formateurId);
+}
+
+
 }
