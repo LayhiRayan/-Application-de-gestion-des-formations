@@ -94,7 +94,8 @@ Le diagramme de classes ci-dessous représente la structure principale de l'appl
 
 
 ## 🧩Architecture :
-![image](https://github.com/user-attachments/assets/f962d522-eec8-4277-ac8b-c80c04faaf54)
+![image](https://github.com/user-attachments/assets/d899b326-c333-4914-80f1-76ac4d357f7a)
+
 
 
 ## 📃 Pages principales
